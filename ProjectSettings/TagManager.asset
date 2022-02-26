@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Store
+  - Canvas
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Water
+    uniqueID: 1929882879
+    locked: 0
+  - name: Ground
+    uniqueID: 3879921553
+    locked: 0
+  - name: Ground Props
+    uniqueID: 2327659487
+    locked: 0
+  - name: Player
+    uniqueID: 3784491689
+    locked: 0
+  - name: Structures Without Colliders
+    uniqueID: 702355329
+    locked: 0
+  - name: Structures
+    uniqueID: 188031757
+    locked: 0
+  - name: Structures Props
+    uniqueID: 188345689
+    locked: 0
+  - name: UI
+    uniqueID: 3625436575
+    locked: 0
