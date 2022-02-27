@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Store
   - Canvas
+  - Refrigerator
+  - Closet
+  - House
+  - Garage
   layers:
   - Default
   - TransparentFX

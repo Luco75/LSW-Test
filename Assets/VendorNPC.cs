@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class VendorNPC : MonoBehaviour
 {
-    [SerializeField] private Item[] thisVendorItems; // contain the items of the each vendor
+    [SerializeField] private string thisVendorName; // contain the name of the store
+    public Item[] thisVendorItems; // contain the items of the each vendor
+    public List<Item> thisVendorList = new List<Item>(); // contain the items of the each vendor
+    [SerializeField] private Vector3 thisItemsScale; // contain the scale needed for the items image
     CanvasController canvas;
     
     void Start()
@@ -22,7 +25,7 @@ public class VendorNPC : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            canvas.ShowItems(thisVendorItems, "Cars Shop");
+            canvas.ShowItems(thisVendorList, thisVendorName, thisItemsScale);
         }
     }
 
