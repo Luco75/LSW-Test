@@ -29,6 +29,9 @@ TextureImporter:
   - first:
       213: 986476396582447780
     second: house_7
+  - first:
+      213: -592144858011753898
+    second: house_8
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -281,6 +284,27 @@ TextureImporter:
       bones: []
       spriteID: 4aaaa9d5e0ba0bd00800000000000000
       internalID: 986476396582447780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: house_8
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 1
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 652a2a2936748c7f0800000000000000
+      internalID: -592144858011753898
       vertices: []
       indices: 
       edges: []
