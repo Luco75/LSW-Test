@@ -44,12 +44,26 @@ public class PlayerItems : MonoBehaviour
         {
             canvas.Alert("Your " + thisName + " is full");
         }
-    }
+    } 
 
     public void QuitItem(Item itemToQuit)
     {
         playerItemsList.Remove(itemToQuit);
         GetComponent<VendorNPC>().thisVendorList.Remove(itemToQuit);
         canvas.ShowItems(playerItemsList, canvas.shopClass, canvas.newItemsScale);
+    }
+
+    /*
+        the second parameter of ShowItems() determinate the colors of the UI. when player sell an object in a store, need conserve the store UI, for this
+        use canvas.shopclass, but when it eat, canvas.showclass = the last store that visit and this make that refrigerator UI change after eat the first food.
+        for solve this when eat use EatFood() that use thisVendorName and not canvas.showclass how second parameter of ShowItems().
+     */
+
+    public void EatFood(Item itemToQuit)
+    {
+        playerItemsList.Remove(itemToQuit);
+        VendorNPC thisVendor = GetComponent<VendorNPC>();
+        thisVendor.thisVendorList.Remove(itemToQuit);
+        canvas.ShowItems(playerItemsList, thisVendor.thisVendorName, thisVendor.thisItemsScale);
     }
 }

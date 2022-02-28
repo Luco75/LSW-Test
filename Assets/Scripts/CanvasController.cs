@@ -4,6 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+[Serializable]
+public struct Item //This struct are use for define all items of the game 
+{
+    public Sprite icon;
+    public string name;
+    public string description;
+    public string clotheType;
+    public int index;
+    public int price;
+
+    // clotheType and index variables are exclusive for the clothes
+}
+
 public class CanvasController : MonoBehaviour
 {
     [Header("UI Colors")]
@@ -60,7 +74,6 @@ public class CanvasController : MonoBehaviour
 
     void Start()
     {
-        
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         refrigerator = GameObject.FindGameObjectWithTag("Refrigerator").GetComponent<PlayerItems>();
         closet = GameObject.FindGameObjectWithTag("Closet").GetComponent<PlayerItems>();
@@ -469,19 +482,30 @@ public class CanvasController : MonoBehaviour
     }
     public void Job()
     {
-        SoundManager.CreateSound(clips[3], transform.position, false, 1);
-        Alert("You've had a rough day. Time to rest and eat something");
-        player.needJob = false;
-        player.angry = true;
-        player.tired = true;
+        if (player.needJob)
+        {
+            SoundManager.CreateSound(clips[3], transform.position, false, 1);
+            Alert("You've had a rough day. Time to rest and eat something");
+            player.needJob = false;
+            player.angry = true;
+            player.tired = true;
+        }
+        else
+        {
+            Alert("Enough work for today");
+        }
     }
 
     public void EatAndDrink()
     {
-        if(refrigerator.playerItemsList.Count > 0)
+        if (player.needJob)
         {
-            SoundManager.CreateSound(clips[2], transform.position, false, 2);
-            refrigerator.playerItemsList.Remove(refrigerator.playerItemsList[buttonSelected]);
+            Alert("You should finish working with the pc before eating");
+        }
+        else if(refrigerator.playerItemsList.Count > 0)
+        {
+            SoundManager.CreateSound(clips[2], transform.position, false, 20);
+            refrigerator.EatFood(currentShopItems[buttonSelected]);
             Alert("You feel satiated. Now you can sleep");
             player.angry = false;
         }
@@ -512,17 +536,7 @@ public class CanvasController : MonoBehaviour
         player.needJob = true;
         player.money += 100;
         SoundManager.CreateSound(clips[1], transform.position, false, 1);
+        textPlayerMoney.GetComponent<TMPro.TextMeshProUGUI>().text = "$" + player.money.ToString();
         Alert("You have received your pay for your work (+$100)");
     }
-}
-
-[Serializable]
-public struct Item
-{
-    public Sprite icon;
-    public string name;
-    public string description;
-    public string clotheType;
-    public int index;
-    public int price;
 }

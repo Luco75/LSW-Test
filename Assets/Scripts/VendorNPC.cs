@@ -9,9 +9,9 @@ Initially this script controlled only the vendors but finally I decided to use i
 
 public class VendorNPC : MonoBehaviour
 {
-    [SerializeField] private string thisVendorName; // contain the name of the store
+    public string thisVendorName; // contain the name of the store
     public List<Item> thisVendorList = new List<Item>(); // contain the items of the each vendor
-    [SerializeField] private Vector3 thisItemsScale; // contain the scale needed for the items image
+    public Vector3 thisItemsScale; // contain the scale needed for the items image
     [SerializeField] private ParticleSystem ps;
     CanvasController canvas;
     
