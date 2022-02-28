@@ -6,14 +6,13 @@ public class ButtonController : MonoBehaviour
 {
     [SerializeField] private int id;
     CanvasController canvas;
-    // Start is called before the first frame update
+
     void Start()
     {
         canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<CanvasController>();
         id = transform.GetSiblingIndex();
     }
 
-    // Update is called once per frame
     void Update()
     {
         

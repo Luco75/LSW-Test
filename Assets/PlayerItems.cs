@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class PlayerItems : MonoBehaviour
 {
-    public Item[] playerItems;
     public List<Item> playerItemsList = new List<Item>();
     public int itemCount;
     private int totalItems;
     [SerializeField] private string thisName;
-
+    
     CanvasController canvas;
 
     
@@ -24,7 +23,6 @@ public class PlayerItems : MonoBehaviour
             case "House": totalItems = 3; break;
             case "Garage": totalItems = 6; break;
         }
-        playerItems = new Item[totalItems]; /*ACA TA EL TEMA*/
         itemCount = 0;
     }
 

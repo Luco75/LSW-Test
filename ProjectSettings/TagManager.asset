@@ -10,6 +10,9 @@ TagManager:
   - Closet
   - House
   - Garage
+  - Virtual Camera
+  - PC
+  - Bed
   layers:
   - Default
   - TransparentFX

@@ -33,11 +33,7 @@ public class RefrigeratorController : MonoBehaviour
             playerFood[foodCount] = newFood;
             foodCount++;
 
-            GetComponent<VendorNPC>().thisVendorItems = new Item[foodCount];
-            for (int i = 0; i < foodCount; i++)
-            {
-                GetComponent<VendorNPC>().thisVendorItems[i] = playerFood[i];
-            }
+            
         }
         else
         {

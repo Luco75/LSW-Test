@@ -5,10 +5,11 @@ using UnityEngine;
 public class VendorNPC : MonoBehaviour
 {
     [SerializeField] private string thisVendorName; // contain the name of the store
-    public Item[] thisVendorItems; // contain the items of the each vendor
     public List<Item> thisVendorList = new List<Item>(); // contain the items of the each vendor
     [SerializeField] private Vector3 thisItemsScale; // contain the scale needed for the items image
+    [SerializeField] private ParticleSystem ps;
     CanvasController canvas;
+    
     
     void Start()
     {
@@ -25,7 +26,21 @@ public class VendorNPC : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            canvas.ShowItems(thisVendorList, thisVendorName, thisItemsScale);
+            if(gameObject.tag == "PC")
+            {
+                canvas.ShowPC();
+                ps.Stop();
+            }
+            else if(gameObject.tag == "Bed") 
+            {
+                canvas.ShowBedOptions();
+                ps.Stop();
+            }
+            else
+            {
+                canvas.ShowItems(thisVendorList, thisVendorName, thisItemsScale);
+                ps.Stop();
+            }
         }
     }
 

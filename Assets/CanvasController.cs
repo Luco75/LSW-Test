@@ -11,8 +11,11 @@ public class CanvasController : MonoBehaviour
     [SerializeField] private Color[] titleColors; //keep the shop or store windows
     [SerializeField] private GameObject[] uiBorders; //keep the shop or store windows
     [SerializeField] private GameObject[] uiInteriors; //keep the shop or store windows
+    [SerializeField] private GameObject textPlayerMoney; //keep the shop or store windows
     [SerializeField] private GameObject uiTitle; //keep the shop or store windows
     [SerializeField] private GameObject shopWindows; //keep the shop or store windows
+    [SerializeField] private GameObject pcWindows; //keep the shop or store windows
+    [SerializeField] private GameObject bedMenu; //keep the shop or store windows
     [SerializeField] private GameObject shopName; //is the text(TMP) with the name of the store 
     [SerializeField] private GameObject itemName; //is the text(TMP) with the name of the selected item
     [SerializeField] private GameObject itemDetails; //is the text(TMP) with the description of the selected item
@@ -23,13 +26,13 @@ public class CanvasController : MonoBehaviour
     [SerializeField] private GameObject takeButton; //button use when player eat or drink
     [SerializeField] private GameObject useButton; //button use when player use a clothe
     public GameObject buttons; //contain the father gameobject whit all buttons of aviable items
-    public int currentStoreTotalItems; //keep the numbers of the total items for each store
     private List<Item> currentShopItems = new List<Item>(); //used for save each item aviable
     private int buttonSelected;
     public string shopClass;
     
     //Buy and Sell feature
     [SerializeField] private Dropdown dropdown;
+    [SerializeField] private GameObject dropdownContainer; // use for enable and disable dropdown
     private int newValue;
     private int lastValue;
     private bool valueHasChange;
@@ -37,20 +40,31 @@ public class CanvasController : MonoBehaviour
     private List<Item> shopListAux = new List<Item>();
     private List<Item> playerList = new List<Item>();
     public Vector3 newItemsScale;
+    public Vector3 nextDestiny;
 
     PlayerController player;
     PlayerItems refrigerator, closet, house, garage;
 
     void Start()
     {
-        shopWindows.SetActive(false);
+        
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         refrigerator = GameObject.FindGameObjectWithTag("Refrigerator").GetComponent<PlayerItems>();
         closet = GameObject.FindGameObjectWithTag("Closet").GetComponent<PlayerItems>();
         house = GameObject.FindGameObjectWithTag("House").GetComponent<PlayerItems>();
         garage = GameObject.FindGameObjectWithTag("Garage").GetComponent<PlayerItems>();
+
+        textPlayerMoney.GetComponent<TMPro.TextMeshProUGUI>().text = "$" + player.money.ToString();
+        shopWindows.SetActive(false);
+        pcWindows.SetActive(false);
+        bedMenu.SetActive(false);
+        buyButton.SetActive(false);
+        sellButton.SetActive(false);
+        useButton.SetActive(false);
+        takeButton.SetActive(false);
         dropdown.value = 0;
         lastValue = dropdown.value;
+        
     }
 
 
@@ -154,6 +168,9 @@ public class CanvasController : MonoBehaviour
             child.SetActive(false);
         }
 
+        if (name == "Refrigerator" || name == "Closet") dropdownContainer.SetActive(false);
+        else dropdownContainer.SetActive(true);
+
         int colorIndex = 0; //use for set the correct UI color (white for refrigerator, brown for closet, and blue for the rest of stores)
 
         // if player is in your refrigerator
@@ -183,19 +200,19 @@ public class CanvasController : MonoBehaviour
             colorIndex = 2;
             // show the correct button for this case
 
-            /*if (dropdown.value == 0)
+            if (dropdown.value == 0)
             {
                 buyButton.SetActive(true);
                 sellButton.SetActive(false);
             }
-            else
+            else if (dropdown.value == 1)
             {
-                buyButton.SetActive(true);
-                sellButton.SetActive(false);
-            }*/
-
+                buyButton.SetActive(false);
+                sellButton.SetActive(true);
+            }
             takeButton.SetActive(false);
             useButton.SetActive(false);
+
             //In this case, the next variable is use during shoppings.
             shopClass = name;
         }
@@ -227,6 +244,26 @@ public class CanvasController : MonoBehaviour
         }
     }
 
+    public void ShowPC()
+    {
+        pcWindows.SetActive(true);
+    }
+
+    public void ClosePc()
+    {
+        pcWindows.SetActive(false);
+    }
+
+    public void ShowBedOptions()
+    {
+        bedMenu.SetActive(true);
+    }
+
+    public void CloseBedOptions()
+    {
+        bedMenu.SetActive(false);
+    }
+
     public void SetItemsInfo(int id)
     {
         buttonSelected = id;
@@ -241,7 +278,8 @@ public class CanvasController : MonoBehaviour
         // if player is in your closet
         else if (name == "Closet")
         {
-            
+            itemName.GetComponent<TMPro.TextMeshProUGUI>().text = currentShopItems[id].name;
+            itemDetails.GetComponent<TMPro.TextMeshProUGUI>().text = currentShopItems[id].description;
         }
 
         //if player is in stores
@@ -257,6 +295,9 @@ public class CanvasController : MonoBehaviour
     {
         if(player.money >= currentShopItems[buttonSelected].price)
         {
+            player.money -= currentShopItems[buttonSelected].price;
+            textPlayerMoney.GetComponent<TMPro.TextMeshProUGUI>().text = "$" + player.money.ToString();
+
             switch (shopClass)
             {
                 case "Supermarket":
@@ -269,14 +310,12 @@ public class CanvasController : MonoBehaviour
                     AddClothes();
                     break;
                 case "Hairdressing":
-                    AddHairStyle();
+                    ChangeHairStyle();
                     break;
                 case "Cars Shop":
                     AddCar();
                     break;
             }
-
-            player.money -= currentShopItems[buttonSelected].price;
         }
         else
         {
@@ -286,19 +325,19 @@ public class CanvasController : MonoBehaviour
 
     public void Sell()
     {
+        player.money += currentShopItems[buttonSelected].price;
+        textPlayerMoney.GetComponent<TMPro.TextMeshProUGUI>().text = "$" + player.money.ToString();
+
         switch (shopClass)
         {
             case "Supermarket":
-                
+                RemoveFood();
                 break;
             case "Furnitures":
-
+                RemoveFurniture();
                 break;
             case "Clothing store":
-
-                break;
-            case "Hairdressing":
-
+                RemoveClothes();
                 break;
             case "Cars Shop":
                 RemoveCar();
@@ -306,15 +345,7 @@ public class CanvasController : MonoBehaviour
         }
     }
 
-        public void EatAndDrink()
-    {
-        // Delete eat or drink for refrigerator and increase the player nutrition 
-    }
-
-    public void Dress()
-    {
-        // Change the clothe sprite
-    }
+    
 
     public void CloseShop()
     {
@@ -325,6 +356,8 @@ public class CanvasController : MonoBehaviour
             itemPrice.GetComponent<TMPro.TextMeshProUGUI>().text = "";
             dropdown.value = 0;
             lastValue = 0;
+            buyButton.SetActive(true);
+            sellButton.SetActive(false);
             shopWindows.SetActive(false);
         }
     }
@@ -342,9 +375,19 @@ public class CanvasController : MonoBehaviour
         alertPanel.transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = alert;
     }
 
+    private void ChangeHairStyle()
+    {
+        Alert("Congratulations! You have a new hair style.");
+    }
+
     private void AddFood()
     {
         refrigerator.AddNewItem(currentShopItems[buttonSelected]);
+    }
+
+    private void RemoveFood()
+    {
+        refrigerator.QuitItem(currentShopItems[buttonSelected]);
     }
 
     private void AddClothes()
@@ -352,27 +395,98 @@ public class CanvasController : MonoBehaviour
         closet.AddNewItem(currentShopItems[buttonSelected]);
     }
 
+    private void RemoveClothes()
+    {
+        closet.QuitItem(currentShopItems[buttonSelected]);
+    }
+
     private void AddFurniture()
     {
-        player.BuyObject(buttonSelected, "Furniture");
+        player.SetObject(buttonSelected, "Furniture", true);
         house.AddNewItem(currentShopItems[buttonSelected]);
     }
 
-    private void AddHairStyle()
+    private void RemoveFurniture()
     {
-        Alert("Congratulations! You have a new hair style.");
+        player.SetObject(buttonSelected, "Furniture", false);
+        house.QuitItem(currentShopItems[buttonSelected]);
     }
-    
+
     private void AddCar()
     {
-        player.BuyObject(buttonSelected, "Car");
+        player.SetObject(buttonSelected, "Car", true);
         garage.AddNewItem(currentShopItems[buttonSelected]);
     }
 
     private void RemoveCar()
     {
+        player.SetObject(buttonSelected, "Car", false);
         garage.QuitItem(currentShopItems[buttonSelected]);
     }
+
+    public void Teleport()
+    {
+        player.transform.position = nextDestiny;
+        GameObject vcam = GameObject.FindGameObjectWithTag("Virtual Camera");
+        vcam.transform.position = nextDestiny;
+    }
+
+    public void Dress()
+    {
+        if (currentShopItems[buttonSelected].clotheType == "torso")
+        {
+            player.bodyParts[2].GetComponent<SpriteRenderer>().sprite = player.allTorsosFront[currentShopItems[buttonSelected].index];
+            player.bodyParts[3].GetComponent<SpriteRenderer>().sprite = player.allRightArms[currentShopItems[buttonSelected].index];
+            player.bodyParts[4].GetComponent<SpriteRenderer>().sprite = player.allLeftArms[currentShopItems[buttonSelected].index];
+            player.torsoIndex = currentShopItems[buttonSelected].index;
+        }
+        else
+        {
+            player.bodyParts[5].GetComponent<SpriteRenderer>().sprite = player.allLegs[currentShopItems[buttonSelected].index];
+            player.bodyParts[6].GetComponent<SpriteRenderer>().sprite = player.allLegs[currentShopItems[buttonSelected].index];
+        }
+    }
+    public void Job()
+    {
+        Alert("You've had a rough day. Time to rest and eat something");
+        player.needJob = false;
+        player.angry = true;
+        player.tired = true;
+    }
+
+    public void EatAndDrink()
+    {
+        Alert("You feel satiated. Now you can sleep");
+        player.angry = false;
+    }
+
+    public void Sleep()
+    {
+        if (player.needJob)
+        {
+            Alert("You must work before you rest");
+        }
+        else if (player.angry)
+        {
+            Alert("You must eat something before sleeping");
+        }
+        else
+        {
+            CloseBedOptions();
+            GetComponent<Animator>().Play("TransitionPanel_NewDay");
+        }
+    }
+
+    public void NewDay()
+    {
+        player.tired = false;
+        player.needJob = true;
+        player.money += 100;
+        Alert("You have received your pay for your work (+$100)");
+    }
+
+
+
 
 }
 
@@ -382,5 +496,7 @@ public struct Item
     public Sprite icon;
     public string name;
     public string description;
+    public string clotheType;
+    public int index;
     public int price;
 }
